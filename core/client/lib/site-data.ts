@@ -13,11 +13,12 @@ export const company = {
 } as const;
 
 export const navigation = [
-  { label: "Nosotros", href: "/#nosotros" },
-  { label: "Productos", href: "/#productos" },
-  { label: "Proceso", href: "/#proceso" },
-  { label: "Sedes", href: "/#sedes" },
-  { label: "Contacto", href: "/#contacto" },
+  { label: "Nosotros", href: "/nosotros" },
+  { label: "Productos", href: "/productos" },
+  { label: "Proyectos", href: "/proyectos" },
+  { label: "Documentos", href: "/documentos" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contacto", href: "/contacto" },
 ] as const;
 
 export const stats = [
@@ -92,16 +93,19 @@ export const sites = [
     name: "Oficina principal, almacén y distribución",
     address: "Ca. Arquímedes Mz. B1 Lt. 15, Urb. La Campiña",
     city: "Chorrillos, Lima",
+    coordinates: "-12.1757,-76.9960",
   },
   {
     name: "Ventas sector distribución",
     address: "Av. México N° 554, Urb. Balconcillo",
     city: "La Victoria, Lima",
+    coordinates: "-12.0752,-77.0240",
   },
   {
     name: "Centro de procesamiento principal",
     address: "Los Huertos de Oro de San Hilarión Mz. B1 Lt. 3",
     city: "Chilca, Cañete",
+    coordinates: "-12.5212,-76.7227",
   },
 ] as const;
 

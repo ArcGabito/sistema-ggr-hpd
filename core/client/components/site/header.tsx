@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
@@ -9,7 +10,9 @@ import { ButtonLink } from "@/components/ui/button";
 import { Logo } from "./logo";
 
 export function Header() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-100/70 bg-white/85 backdrop-blur-md">
@@ -18,15 +21,25 @@ export function Header() {
           <Logo />
         </Link>
 
-        <nav aria-label="Principal" className="hidden items-center gap-9 md:flex">
+        <nav aria-label="Principal" className="hidden items-center gap-7 lg:flex">
           {navigation.map((item) => (
-            <a key={item.href} href={item.href} className="text-sm font-medium text-ink-600 transition hover:text-ink-900">
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={isActive(item.href) ? "page" : undefined}
+              className={`relative py-1 text-sm font-medium transition ${
+                isActive(item.href) ? "text-ink-900" : "text-ink-500 hover:text-ink-900"
+              }`}
+            >
               {item.label}
-            </a>
+              {isActive(item.href) ? (
+                <motion.span layoutId="site-nav-active" className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-sky-400" />
+              ) : null}
+            </Link>
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <ButtonLink href="/ingresar" variant="primary" className="px-5">
             Ingresar <ArrowUpRight className="size-4" aria-hidden />
           </ButtonLink>
@@ -34,7 +47,7 @@ export function Header() {
 
         <button
           type="button"
-          className="grid size-11 place-items-center rounded-full text-ink-900 hover:bg-ink-50 md:hidden"
+          className="grid size-11 place-items-center rounded-full text-ink-900 hover:bg-ink-50 lg:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobile-menu"
@@ -53,20 +66,23 @@ export function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="overflow-hidden border-t border-ink-100 bg-white md:hidden"
+            className="overflow-hidden border-t border-ink-100 bg-white lg:hidden"
           >
             <div className="flex flex-col gap-1 px-4 py-4">
               {navigation.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-xl px-3 py-3 text-base font-medium text-ink-800 hover:bg-sky-50"
+                  aria-current={isActive(item.href) ? "page" : undefined}
+                  className={`rounded-xl px-3 py-3 text-base font-medium hover:bg-sky-50 ${
+                    isActive(item.href) ? "bg-sky-50 text-ink-900" : "text-ink-700"
+                  }`}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
-              <ButtonLink href="/ingresar" className="mt-2">
+              <ButtonLink href="/ingresar" className="mt-2" onClick={() => setOpen(false)}>
                 Ingresar al sistema
               </ButtonLink>
             </div>

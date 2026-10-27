@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { catalog } from "@/lib/site-data";
 import { FacadeArt } from "./facade-art";
 import { Reveal } from "./reveal";
@@ -23,6 +24,9 @@ export function Catalog() {
         <Reveal className="flex flex-col">
           <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Catálogo de productos</h2>
           <p className="mt-5 max-w-xs text-base text-ink-500">Vidrios, aluminios y soluciones decorativas para cada proyecto.</p>
+          <Link href="/productos" className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-900 hover:text-sky-700">
+            Ver catálogo completo <ArrowRight className="size-4" aria-hidden />
+          </Link>
           <div className="mt-8 hidden gap-3 lg:mt-auto lg:flex">
             <ArrowButtons onScroll={scroll} />
           </div>

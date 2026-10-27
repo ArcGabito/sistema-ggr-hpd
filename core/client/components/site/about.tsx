@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { brands, stats } from "@/lib/site-data";
 import { Counter, Reveal } from "./reveal";
 
@@ -12,6 +14,9 @@ export function About() {
             decorativas para la arquitectura. Nuestra planta de 28,000 m² opera con tecnología 100% europea y procesos certificados
             ISO 9001 e ISO 45001, para entregar cada proyecto con diseño, funcionalidad y seguridad.
           </p>
+          <Link href="/nosotros" className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-900 hover:text-sky-700">
+            Conoce más sobre nosotros <ArrowRight className="size-4" aria-hidden />
+          </Link>
         </Reveal>
 
         <dl className="grid grid-cols-2 gap-x-8 gap-y-10">
