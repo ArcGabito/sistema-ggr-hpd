@@ -1,0 +1,38 @@
+# Control de versiones y CI
+.git
+.github
+.gitignore
+
+# Secretos
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+
+# Dependencias y artefactos de Node / Next.js
+**/node_modules
+**/.next
+**/out
+**/coverage
+**/*.tsbuildinfo
+**/next-env.d.ts
+**/npm-debug.log*
+
+# Artefactos de .NET
+**/bin
+**/obj
+**/*.user
+**/.vs
+**/appsettings.Development.json
+
+# Editor / SO
+**/.vscode
+**/.idea
+**/.DS_Store
+
+# No forman parte de las imágenes
+docker
+scripts
+docs
+**/*.md
