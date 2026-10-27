@@ -1,15 +1,27 @@
 #!/usr/bin/env bash
 # Instala dependencias, construye las imágenes y levanta los contenedores.
+# Es autónomo (no invoca otros scripts) e idempotente: puede ejecutarse varias veces.
 # Uso: ./scripts/run.sh [--skip-install]
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 COMPOSE_FILE="$ROOT_DIR/docker/docker-compose.yml"
 ENV_FILE="$ROOT_DIR/.env"
+ENV_EXAMPLE="$ROOT_DIR/.env.example"
+DB_VOLUME="sistema-ggr-hpd-database-data"
+SKIP_INSTALL=false
 
 info() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[!]\033[0m %s\n' "$*"; }
 fail() { printf '\033[1;31m[x]\033[0m %s\n' "$*" >&2; exit 1; }
+
+for arg in "$@"; do
+  case "$arg" in
+    --skip-install) SKIP_INSTALL=true ;;
+    -h | --help) sed -n '2,4p' "$0"; exit 0 ;;
+    *) fail "Opción desconocida: $arg" ;;
+  esac
+done
 
 random_string() {
   local length="$1"
@@ -20,59 +32,101 @@ random_string() {
   fi
 }
 
-ensure_env() {
-  if [[ -s "$ENV_FILE" ]] && grep -q '^JWT_KEY=' "$ENV_FILE"; then
-    return
-  fi
-  info "Creando .env a partir de .env.example con secretos aleatorios..."
-  cp "$ROOT_DIR/.env.example" "$ENV_FILE"
-  sed -i.bak \
-    -e "s|^DB_SA_PASSWORD=.*|DB_SA_PASSWORD=Hpd_$(random_string 20)9a|" \
-    -e "s|^JWT_KEY=.*|JWT_KEY=$(random_string 64)|" \
-    -e "s|^SEED_ADMIN_PASSWORD=.*|SEED_ADMIN_PASSWORD=Hpd_$(random_string 12)1!|" \
-    "$ENV_FILE"
-  rm -f "$ENV_FILE.bak"
+# Valor aleatorio para las variables secretas; falla para el resto.
+secret_for() {
+  case "$1" in
+    DB_SA_PASSWORD) printf 'Hpd_%s9a' "$(random_string 20)" ;;
+    JWT_KEY) random_string 64 ;;
+    SEED_ADMIN_PASSWORD) printf 'Hpd_%s1!' "$(random_string 12)" ;;
+    *) return 1 ;;
+  esac
 }
 
-command -v docker >/dev/null 2>&1 || fail "Docker no está instalado: https://docs.docker.com/get-docker/"
-docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 no está disponible."
-docker info >/dev/null 2>&1 || fail "El daemon de Docker no está corriendo."
+# Crea .env si no existe; si existe, solo agrega las variables nuevas de .env.example.
+# Nunca reemplaza valores existentes, así los secretos se mantienen entre ejecuciones.
+sync_env() {
+  local line key value added=0
+  [[ -f "$ENV_EXAMPLE" ]] || fail "No se encontró $ENV_EXAMPLE"
 
-ensure_env
+  if [[ ! -s "$ENV_FILE" ]]; then
+    if docker volume inspect "$DB_VOLUME" >/dev/null 2>&1; then
+      fail "Existe el volumen $DB_VOLUME pero no hay .env: la contraseña de SQL Server no coincidiría. Restaura tu .env o ejecuta ./scripts/clear.sh -y"
+    fi
+    info "Creando .env desde .env.example con secretos aleatorios..."
+    cp "$ENV_EXAMPLE" "$ENV_FILE"
+    for key in DB_SA_PASSWORD JWT_KEY SEED_ADMIN_PASSWORD; do
+      value="$(secret_for "$key")"
+      sed -i.bak "s|^${key}=.*|${key}=${value}|" "$ENV_FILE"
+    done
+    rm -f "$ENV_FILE.bak"
+  else
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      [[ "$line" =~ ^([A-Z_][A-Z0-9_]*)= ]] || continue
+      key="${BASH_REMATCH[1]}"
+      grep -q "^${key}=" "$ENV_FILE" && continue
+      value="$(secret_for "$key")" && line="${key}=${value}"
+      printf '%s\n' "$line" >>"$ENV_FILE"
+      added=$((added + 1))
+    done <"$ENV_EXAMPLE"
+    if ((added > 0)); then info "Se agregaron $added variable(s) nuevas a .env"; else info ".env al día."; fi
+  fi
+  chmod 600 "$ENV_FILE"
+}
 
-if [[ "${1:-}" != "--skip-install" ]]; then
+env_value() { grep -E "^$1=" "$ENV_FILE" | tail -n1 | cut -d= -f2-; }
+
+install_dependencies() {
+  local client_dir="$ROOT_DIR/core/client"
   if command -v npm >/dev/null 2>&1; then
-    info "Instalando dependencias del cliente (core/client)..."
-    (cd "$ROOT_DIR/core/client" && npm ci --no-audit --no-fund)
+    # npm deja una copia del lockfile en node_modules: si no cambió, no hace falta reinstalar.
+    if [[ -f "$client_dir/node_modules/.package-lock.json" && ! "$client_dir/package-lock.json" -nt "$client_dir/node_modules/.package-lock.json" ]]; then
+      info "Dependencias del cliente al día."
+    else
+      info "Instalando dependencias del cliente (core/client)..."
+      (cd "$client_dir" && npm ci --no-audit --no-fund)
+    fi
   else
     warn "npm no está instalado: se omiten dependencias locales del cliente (Docker las instala igual)."
   fi
 
   if command -v dotnet >/dev/null 2>&1; then
     info "Restaurando dependencias del servidor (core/server)..."
-    (cd "$ROOT_DIR/core/server" && dotnet restore) || warn "dotnet restore falló localmente; la imagen Docker usa su propio SDK."
+    (cd "$ROOT_DIR/core/server" && dotnet restore --verbosity quiet) ||
+      warn "dotnet restore falló localmente; la imagen Docker usa su propio SDK."
   else
     warn ".NET SDK no está instalado: se omite la restauración local (Docker la realiza igual)."
   fi
-fi
+}
+
+wait_for_api() {
+  local url="$1"
+  info "Esperando a que la API responda (migraciones y datos iniciales)..."
+  for _ in $(seq 1 60); do
+    curl -fsS "$url" >/dev/null 2>&1 && return 0
+    sleep 3
+  done
+  docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" logs --tail 40 server >&2 || true
+  fail "La API no respondió en $url tras 3 minutos."
+}
+
+for cmd in docker curl; do
+  command -v "$cmd" >/dev/null 2>&1 || fail "Falta '$cmd'. Instálalo y vuelve a ejecutar el script."
+done
+docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 no está disponible."
+docker info >/dev/null 2>&1 || fail "El daemon de Docker no está corriendo."
+
+sync_env
+$SKIP_INSTALL || install_dependencies
 
 info "Construyendo imágenes y levantando contenedores..."
-docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d --build
+docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d --build --remove-orphans
 
-env_value() { grep -E "^$1=" "$ENV_FILE" | tail -n1 | cut -d= -f2-; }
 CLIENT_PORT="$(env_value CLIENT_PORT)"
 SERVER_PORT="$(env_value SERVER_PORT)"
 DATABASE_PORT="$(env_value DATABASE_PORT)"
 SEED_ADMIN_EMAIL="$(env_value SEED_ADMIN_EMAIL)"
 
-info "Esperando a que la API responda (migraciones y datos iniciales)..."
-for _ in $(seq 1 60); do
-  if curl -fsS "http://localhost:${SERVER_PORT:-5040}/health" >/dev/null 2>&1; then
-    break
-  fi
-  sleep 3
-done
-
+wait_for_api "http://localhost:${SERVER_PORT:-5040}/health"
 docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" ps
 
 cat <<INFO
