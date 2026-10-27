@@ -22,7 +22,7 @@ export function Hero() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          <FacadeArt variant="tower" className="size-full" label="Fachada de vidrio y aluminio" />
+          <FacadeArt variant="tower" anchor="top" className="size-full" label="Fachada de vidrio y aluminio" />
         </motion.div>
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-sky-400/95 via-sky-400/70 to-transparent sm:via-sky-400/40" />
 
