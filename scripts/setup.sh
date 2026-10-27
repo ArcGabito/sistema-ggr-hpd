@@ -69,6 +69,42 @@ sync_env() {
 
 env_value() { grep -E "^$2=" "$1/.env" | tail -n1 | cut -d= -f2-; }
 
+# Comando para instalar ASP.NET Core 10 según el gestor de paquetes disponible.
+aspnet_install_hint() {
+  if command -v pacman >/dev/null 2>&1; then echo "sudo pacman -S aspnet-runtime aspnet-targeting-pack"
+  elif command -v apt-get >/dev/null 2>&1; then echo "sudo apt-get install aspnetcore-runtime-10.0"
+  elif command -v dnf >/dev/null 2>&1; then echo "sudo dnf install aspnetcore-runtime-10.0 aspnetcore-targeting-pack-10.0"
+  else echo "https://dotnet.microsoft.com/download/dotnet/10.0"; fi
+}
+
+# El SDK necesita el runtime y el targeting pack de ASP.NET Core 10; algunas distros los empaquetan aparte.
+has_aspnet_sdk() {
+  local runtimes sdk_root
+  runtimes="$(dotnet --list-runtimes 2>/dev/null || true)"
+  sdk_root="$(dotnet --list-sdks 2>/dev/null | sed -n 's/.*\[\(.*\)\/sdk\]$/\1/p' || true)"
+  sdk_root="${sdk_root%%$'\n'*}"
+  [[ "$runtimes" == *"Microsoft.AspNetCore.App 10."* && -n "$sdk_root" ]] &&
+    compgen -G "$sdk_root/packs/Microsoft.AspNetCore.App.Ref/10.*" >/dev/null
+}
+
+restore_server() {
+  local server_dir="$1" output
+  if ! command -v dotnet >/dev/null 2>&1; then
+    warn ".NET SDK no está instalado: se omite la restauración local (Docker la realiza igual)."
+    return
+  fi
+  if ! has_aspnet_sdk; then
+    warn "El SDK local no incluye ASP.NET Core 10: se omite dotnet restore (Docker compila con su propio SDK)."
+    warn "Para compilar fuera de Docker instala: $(aspnet_install_hint)"
+    return
+  fi
+  info "Restaurando dependencias del servidor (core/server)..."
+  if ! output="$(cd "$server_dir" && dotnet restore --verbosity quiet 2>&1)"; then
+    printf '%s\n' "$output" >&2
+    warn "dotnet restore falló localmente; la imagen Docker usa su propio SDK."
+  fi
+}
+
 for cmd in git docker curl; do
   command -v "$cmd" >/dev/null 2>&1 || fail "Falta '$cmd'. Instálalo y vuelve a ejecutar el script."
 done
@@ -114,13 +150,7 @@ else
   warn "npm no está instalado: se omiten dependencias locales del cliente (Docker las instala igual)."
 fi
 
-if command -v dotnet >/dev/null 2>&1; then
-  info "Restaurando dependencias del servidor (core/server)..."
-  (cd core/server && dotnet restore --verbosity quiet) ||
-    warn "dotnet restore falló localmente; la imagen Docker usa su propio SDK."
-else
-  warn ".NET SDK no está instalado: se omite la restauración local (Docker la realiza igual)."
-fi
+restore_server "$TARGET_DIR/core/server"
 
 # ---------- 4. Contenedores ----------
 COMPOSE=(docker compose --env-file "$TARGET_DIR/.env" -f "$TARGET_DIR/docker/docker-compose.yml")
