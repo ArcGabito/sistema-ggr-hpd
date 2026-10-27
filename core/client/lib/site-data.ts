@@ -28,7 +28,25 @@ export const stats = [
   { value: 40, suffix: "+", label: "inmobiliarias y constructoras" },
 ] as const;
 
-export const brands = ["Imagina", "Valico", "Creativa", "San Pablo", "Diseño Meta", "Huanvil", "Inarco"] as const;
+/** Logos en public/assets/clients. */
+export const clients = [
+  { name: "Cosapi", logo: "cosapi.png" },
+  { name: "OHLA Perú", logo: "ohla.png" },
+  { name: "Grupo Sanjose", logo: "grupo-sanjose.png" },
+  { name: "Inarco", logo: "inarco.png" },
+  { name: "Imagina", logo: "imagina.png" },
+  { name: "Valico", logo: "valico.png" },
+  { name: "Cumbra", logo: "cumbra.png" },
+  { name: "Instituto San Pablo", logo: "instituto-san-pablo.png" },
+  { name: "Creativa", logo: "creativa.png" },
+  { name: "Diseño Meta", logo: "diseno-meta.png" },
+  { name: "Huanwil", logo: "huanwil.png" },
+  { name: "CISSAC", logo: "cissac.png" },
+  { name: "HV Contratistas", logo: "hv-contratistas.png" },
+  { name: "San Charbel Edificaciones", logo: "san-charbel.png" },
+  { name: "Marcan", logo: "marcan.png" },
+  { name: "Alpina", logo: "alpina.png" },
+] as const;
 
 export type FacadeVariant = "tower" | "curtain" | "insulated" | "window" | "sliding" | "panels" | "slats" | "mirror";
 

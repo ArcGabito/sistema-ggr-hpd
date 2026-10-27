@@ -5,7 +5,7 @@ import { Reveal } from "@/components/site/reveal";
 import { Process } from "@/components/site/process";
 import { Commitments } from "@/components/site/commitments";
 import { companyFigures, memberships, pillars, sustainability } from "@/lib/content";
-import { brands } from "@/lib/site-data";
+import { ClientGrid } from "@/components/site/client-logos";
 
 export const metadata: Metadata = {
   title: "Nosotros",
@@ -101,14 +101,11 @@ export default function AboutPage() {
 
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         <Reveal>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-400">Marcas que respaldan nuestra calidad</p>
-          <ul className="mt-6 flex flex-wrap items-center gap-x-10 gap-y-5">
-            {brands.map((brand) => (
-              <li key={brand} className="text-xl font-bold tracking-tight text-ink-300 transition hover:text-ink-900">
-                {brand}
-              </li>
-            ))}
-          </ul>
+          <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">Clientes que confían en nosotros</h2>
+          <p className="mt-4 max-w-xl text-base text-ink-500">Más de 40 inmobiliarias y constructoras han trabajado con nosotros en sus proyectos.</p>
+          <div className="mt-10">
+            <ClientGrid />
+          </div>
         </Reveal>
       </section>
     </>

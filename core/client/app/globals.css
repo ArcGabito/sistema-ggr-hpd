@@ -25,6 +25,17 @@
 
   --radius-card: 1.25rem;
   --radius-panel: 1.75rem;
+
+  --animate-marquee: marquee 50s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 :root {

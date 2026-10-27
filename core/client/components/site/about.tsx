@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { brands, stats } from "@/lib/site-data";
+import { stats } from "@/lib/site-data";
+import { ClientMarquee } from "./client-logos";
 import { Counter, Reveal } from "./reveal";
 
 export function About() {
@@ -33,14 +34,10 @@ export function About() {
       </div>
 
       <Reveal className="mt-20">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-400">Marcas que confían en nuestra calidad</p>
-        <ul className="mt-6 flex flex-wrap items-center gap-x-10 gap-y-5">
-          {brands.map((brand) => (
-            <li key={brand} className="text-xl font-bold tracking-tight text-ink-300 transition hover:text-ink-900">
-              {brand}
-            </li>
-          ))}
-        </ul>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-400">Inmobiliarias y constructoras que confían en nosotros</p>
+        <div className="mt-8">
+          <ClientMarquee />
+        </div>
       </Reveal>
     </section>
   );
