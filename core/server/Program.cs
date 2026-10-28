@@ -48,6 +48,13 @@ builder.Services
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddSingleton<IGuidePdfGenerator, GuidePdfGenerator>();
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services
+    .AddOptions<SmtpOptions>()
+    .Bind(builder.Configuration.GetSection(SmtpOptions.SectionName))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {

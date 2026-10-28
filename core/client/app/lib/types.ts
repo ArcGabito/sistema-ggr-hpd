@@ -1,3 +1,5 @@
+import type { FacadeVariant } from "./site-data";
+
 export type GuideStatus = "Draft" | "Issued" | "InTransit" | "Delivered" | "Cancelled";
 export type DispatchStatus = "Scheduled" | "Loading" | "InTransit" | "Completed" | "Cancelled";
 
@@ -23,6 +25,7 @@ export interface Client {
   taxId: string | null;
   contactName: string | null;
   phoneNumber: string | null;
+  email: string | null;
   address: string | null;
   district: string | null;
   province: string | null;
@@ -134,4 +137,45 @@ export interface DashboardSummary {
   clientsCount: number;
   recentGuides: GuideSummary[];
   upcomingDispatches: Dispatch[];
+}
+
+export interface BlogPostSummary {
+  id: number;
+  title: string;
+  slug: string;
+  summary: string;
+  category: string;
+  coverArt: FacadeVariant;
+  externalUrl: string | null;
+  isPublished: boolean;
+  publishedAt: string | null;
+  updatedAt: string | null;
+}
+
+export interface BlogPostDetail extends BlogPostSummary {
+  content: string | null;
+  authorName: string | null;
+}
+
+export interface ContactRequest {
+  id: number;
+  fullName: string;
+  company: string | null;
+  email: string;
+  phoneNumber: string;
+  message: string;
+  createdAt: string;
+  isAttended: boolean;
+}
+
+export interface GuideEmail {
+  id: number;
+  to: string;
+  cc: string | null;
+  subject: string;
+  invoiceFileName: string | null;
+  succeeded: boolean;
+  error: string | null;
+  sentBy: string;
+  sentAt: string;
 }

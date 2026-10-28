@@ -66,6 +66,7 @@ export default function ClientsPage() {
                       <td className={td}>
                         <p>{client.contactName ?? "—"}</p>
                         {client.phoneNumber ? <p className="text-xs text-ink-400">{client.phoneNumber}</p> : null}
+                        {client.email ? <p className="text-xs text-ink-400">{client.email}</p> : null}
                       </td>
                       <td className={td}>
                         <p className="max-w-xs truncate">{client.address ?? "—"}</p>

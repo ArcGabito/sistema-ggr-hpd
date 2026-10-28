@@ -16,6 +16,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<RemissionGuideItem> RemissionGuideItems => Set<RemissionGuideItem>();
     public DbSet<Dispatch> Dispatches => Set<Dispatch>();
     public DbSet<ContactRequest> ContactRequests => Set<ContactRequest>();
+    public DbSet<BlogPost> BlogPosts => Set<BlogPost>();
+    public DbSet<GuideEmail> GuideEmails => Set<GuideEmail>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
@@ -138,6 +140,31 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(c => c.Email).HasMaxLength(160);
             entity.Property(c => c.PhoneNumber).HasMaxLength(20);
             entity.Property(c => c.Message).HasMaxLength(1000);
+        });
+
+        modelBuilder.Entity<BlogPost>(entity =>
+        {
+            entity.Property(p => p.Title).HasMaxLength(200);
+            entity.Property(p => p.Slug).HasMaxLength(220);
+            entity.Property(p => p.Summary).HasMaxLength(400);
+            entity.Property(p => p.Category).HasMaxLength(50);
+            entity.Property(p => p.CoverArt).HasMaxLength(20);
+            entity.Property(p => p.ExternalUrl).HasMaxLength(400);
+            entity.HasIndex(p => p.Slug).IsUnique();
+            entity.HasIndex(p => new { p.IsPublished, p.PublishedAt });
+            entity.HasOne(p => p.Author).WithMany().HasForeignKey(p => p.AuthorId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<GuideEmail>(entity =>
+        {
+            entity.Property(e => e.To).HasMaxLength(320);
+            entity.Property(e => e.Cc).HasMaxLength(320);
+            entity.Property(e => e.Subject).HasMaxLength(200);
+            entity.Property(e => e.InvoiceFileName).HasMaxLength(200);
+            entity.Property(e => e.Error).HasMaxLength(500);
+            entity.HasIndex(e => e.RemissionGuideId);
+            entity.HasOne(e => e.RemissionGuide).WithMany().HasForeignKey(e => e.RemissionGuideId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.SentBy).WithMany().HasForeignKey(e => e.SentById).OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

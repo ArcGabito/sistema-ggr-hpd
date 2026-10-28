@@ -10,10 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Liberation Sans (SIL OFL 1.1): fuente de la guía de remisión en PDF. -->
+    <None Include="Assets\Fonts\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
+    <PackageReference Include="MailKit" Version="4.18.2" />
+    <PackageReference Include="PdfPig" Version="0.1.16" />
     <!-- Fija la versión transitiva de Microsoft.Data.SqlClient (9.0.11 tiene CVEs conocidos). -->
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">

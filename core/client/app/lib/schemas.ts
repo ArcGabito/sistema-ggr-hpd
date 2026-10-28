@@ -72,3 +72,41 @@ export const driverSchema = z.object({
     .or(z.literal("")),
 });
 export type DriverInput = z.infer<typeof driverSchema>;
+
+export const coverArts = ["tower", "curtain", "insulated", "window", "sliding", "panels", "slats", "mirror"] as const;
+
+export const blogPostSchema = z
+  .object({
+    title: z.string().trim().min(5, "Mínimo 5 caracteres").max(200),
+    slug: z
+      .string()
+      .trim()
+      .max(200)
+      .regex(/^([a-z0-9]+(?:-[a-z0-9]+)*)?$/, "Solo minúsculas, números y guiones"),
+    summary: z.string().trim().min(10, "Escribe un resumen de al menos 10 caracteres").max(400),
+    content: z.string().max(50_000),
+    category: z.enum(["Arquitectura", "Diseño", "Sostenibilidad", "Tendencias", "Noticias"]),
+    coverArt: z.enum(coverArts),
+    externalUrl: z.union([z.literal(""), z.url("Ingresa una URL válida").startsWith("https://", "Debe empezar con https://")]),
+    isPublished: z.boolean(),
+  })
+  .refine((post) => post.content.trim().length > 0 || post.externalUrl.length > 0, {
+    message: "Escribe el contenido o indica el enlace a la publicación original",
+    path: ["content"],
+  });
+export type BlogPostInput = z.infer<typeof blogPostSchema>;
+
+const MAX_INVOICE_BYTES = 10 * 1024 * 1024;
+
+export const guideEmailSchema = z.object({
+  to: z.email("Ingresa el correo del cliente").max(320),
+  cc: z.union([z.literal(""), z.email("Correo en copia no válido").max(320)]),
+  message: z.string().trim().max(1000),
+  saveClientEmail: z.boolean(),
+  invoice: z
+    .custom<FileList>()
+    .optional()
+    .refine((files) => !files?.length || files[0].type === "application/pdf" || files[0].name.toLowerCase().endsWith(".pdf"), "La factura debe ser un PDF")
+    .refine((files) => !files?.length || files[0].size <= MAX_INVOICE_BYTES, "La factura no debe superar los 10 MB"),
+});
+export type GuideEmailInput = z.infer<typeof guideEmailSchema>;

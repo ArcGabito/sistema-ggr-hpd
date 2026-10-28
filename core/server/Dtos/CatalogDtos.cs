@@ -11,6 +11,7 @@ public record ClientResponse(
     string? TaxId,
     string? ContactName,
     string? PhoneNumber,
+    string? Email,
     string? Address,
     string? District,
     string? Province);

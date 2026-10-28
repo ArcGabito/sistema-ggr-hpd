@@ -60,6 +60,11 @@ public static class DbSeeder
             context.Drivers.AddRange(CatalogSeedData.Drivers);
         }
 
+        if (!await context.BlogPosts.AnyAsync(cancellationToken))
+        {
+            context.BlogPosts.AddRange(BlogSeedData.Posts);
+        }
+
         await context.SaveChangesAsync(cancellationToken);
 
         var seedClients = LoadLocalClientSeed();

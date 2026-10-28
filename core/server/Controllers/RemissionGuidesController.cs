@@ -11,8 +11,14 @@ namespace Server.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/remission-guides")]
-public class RemissionGuidesController(AppDbContext context) : ControllerBase
+public class RemissionGuidesController(
+    AppDbContext context,
+    IGuidePdfGenerator pdfGenerator,
+    IEmailSender emailSender,
+    ILogger<RemissionGuidesController> logger) : ControllerBase
 {
+    private const long MaxInvoiceBytes = 10 * 1024 * 1024;
+
     private const string DefaultSeries = "T001";
 
     [HttpGet]
@@ -175,6 +181,103 @@ public class RemissionGuidesController(AppDbContext context) : ControllerBase
         await context.SaveChangesAsync(cancellationToken);
 
         return (await LoadDetailAsync(id, cancellationToken))!.ToDetail();
+    }
+
+    [HttpGet("{id:int}/pdf")]
+    public async Task<IActionResult> DownloadPdf(int id, CancellationToken cancellationToken)
+    {
+        var guide = await LoadDetailAsync(id, cancellationToken);
+        if (guide is null) return NotFound();
+        return File(pdfGenerator.Generate(guide), "application/pdf", $"guia-remision-{guide.FullNumber}.pdf");
+    }
+
+    [HttpGet("{id:int}/emails")]
+    public async Task<IReadOnlyList<GuideEmailResponse>> GetEmails(int id, CancellationToken cancellationToken) =>
+        (await context.GuideEmails.AsNoTracking()
+            .Include(e => e.SentBy)
+            .Where(e => e.RemissionGuideId == id)
+            .OrderByDescending(e => e.SentAt)
+            .ToListAsync(cancellationToken))
+        .Select(e => new GuideEmailResponse(e.Id, e.To, e.Cc, e.Subject, e.InvoiceFileName, e.Succeeded, e.Error, e.SentBy?.FullName ?? string.Empty, e.SentAt))
+        .ToList();
+
+    [HttpPost("{id:int}/email")]
+    [RequestSizeLimit(12 * 1024 * 1024)]
+    public async Task<ActionResult<GuideEmailResponse>> SendEmail(int id, [FromForm] SendGuideEmailForm form, CancellationToken cancellationToken)
+    {
+        var guide = await LoadDetailAsync(id, cancellationToken);
+        if (guide is null) return NotFound();
+
+        if (guide.Status is RemissionGuideStatus.Draft or RemissionGuideStatus.Cancelled)
+        {
+            return Problem(statusCode: StatusCodes.Status409Conflict, title: "Solo se pueden enviar guías emitidas.");
+        }
+
+        var attachments = new List<EmailAttachment>
+        {
+            new($"guia-remision-{guide.FullNumber}.pdf", pdfGenerator.Generate(guide), "application/pdf")
+        };
+
+        string? invoiceName = null;
+        if (form.Invoice is { Length: > 0 } invoice)
+        {
+            if (invoice.Length > MaxInvoiceBytes) return ValidationError(nameof(form.Invoice), "La factura no debe superar los 10 MB.");
+
+            using var buffer = new MemoryStream();
+            await invoice.CopyToAsync(buffer, cancellationToken);
+            var bytes = buffer.ToArray();
+            // Se valida la firma del archivo, no solo la extensión.
+            if (bytes.Length < 5 || !bytes.AsSpan(0, 5).SequenceEqual("%PDF-"u8))
+            {
+                return ValidationError(nameof(form.Invoice), "La factura debe ser un archivo PDF.");
+            }
+
+            invoiceName = Path.GetFileName(invoice.FileName);
+            if (string.IsNullOrWhiteSpace(invoiceName) || !invoiceName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase)) invoiceName = "factura.pdf";
+            attachments.Add(new EmailAttachment(invoiceName, bytes, "application/pdf"));
+        }
+
+        var to = form.To.Trim().ToLowerInvariant();
+        var cc = string.IsNullOrWhiteSpace(form.Cc) ? null : form.Cc.Trim().ToLowerInvariant();
+        var subject = GuideEmailComposer.Subject(guide);
+        var (html, text) = GuideEmailComposer.Body(guide, form.Message, invoiceName is not null);
+
+        var record = new GuideEmail
+        {
+            RemissionGuideId = guide.Id,
+            To = to,
+            Cc = cc,
+            Subject = subject,
+            InvoiceFileName = invoiceName,
+            SentById = User.GetUserId()
+        };
+
+        try
+        {
+            await emailSender.SendAsync(to, cc, subject, html, text, attachments, cancellationToken);
+            record.Succeeded = true;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            logger.LogError(ex, "No se pudo enviar la guía {Number} a {To}", guide.FullNumber, to);
+            record.Error = "El servidor de correo rechazó el envío o no está disponible.";
+        }
+
+        context.GuideEmails.Add(record);
+        if (record.Succeeded && form.SaveClientEmail)
+        {
+            await context.Clients.Where(c => c.Id == guide.ClientId)
+                .ExecuteUpdateAsync(s => s.SetProperty(c => c.Email, to), cancellationToken);
+        }
+        await context.SaveChangesAsync(cancellationToken);
+
+        if (!record.Succeeded)
+        {
+            return Problem(statusCode: StatusCodes.Status502BadGateway, title: record.Error);
+        }
+
+        var sentBy = await context.Users.Where(u => u.Id == record.SentById).Select(u => u.FullName).FirstAsync(cancellationToken);
+        return new GuideEmailResponse(record.Id, record.To, record.Cc, record.Subject, record.InvoiceFileName, true, null, sentBy, record.SentAt);
     }
 
     private Task<RemissionGuide?> LoadDetailAsync(int id, CancellationToken cancellationToken) =>

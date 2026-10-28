@@ -1,4 +1,6 @@
 import type { MetadataRoute } from "next";
+import { connection } from "next/server";
+import { getPublishedPosts } from "@/app/lib/blog";
 import { siteUrl } from "@/app/lib/seo";
 
 const routes: { path: string; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"]; priority: number }[] = [
@@ -11,13 +13,25 @@ const routes: { path: string; changeFrequency: MetadataRoute.Sitemap[number]["ch
   { path: "/documentos", changeFrequency: "monthly", priority: 0.5 },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Incluye los artículos propios del blog, que cambian desde el dashboard.
+  await connection();
   const lastModified = new Date();
-  return routes.map(({ path, changeFrequency, priority }) => ({
-    url: `${siteUrl}${path}`,
-    lastModified,
-    changeFrequency,
-    priority,
-    images: path === "" ? [`${siteUrl}/wallpaper.png`] : undefined,
-  }));
+  const posts = (await getPublishedPosts()).filter((post) => !post.externalUrl);
+
+  return [
+    ...routes.map(({ path, changeFrequency, priority }) => ({
+      url: `${siteUrl}${path}`,
+      lastModified,
+      changeFrequency,
+      priority,
+      images: path === "" ? [`${siteUrl}/wallpaper.png`] : undefined,
+    })),
+    ...posts.map((post) => ({
+      url: `${siteUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.updatedAt ?? post.publishedAt ?? lastModified),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
+  ];
 }

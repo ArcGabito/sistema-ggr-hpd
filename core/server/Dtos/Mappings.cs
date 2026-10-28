@@ -11,6 +11,7 @@ public static class Mappings
         c.TaxId,
         string.Join(' ', new[] { c.FirstName, c.LastName }.Where(s => !string.IsNullOrWhiteSpace(s))) is { Length: > 0 } name ? name : null,
         c.PhoneNumber,
+        c.Email,
         c.Address,
         c.District,
         c.Province);

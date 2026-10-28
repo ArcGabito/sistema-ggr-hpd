@@ -178,6 +178,7 @@ cat <<INFO
   Sitio web     http://localhost:${CLIENT_PORT:-3000}
   Ingresar      http://localhost:${CLIENT_PORT:-3000}/ingresar
   API           http://localhost:${SERVER_PORT:-5040}
+  Correos       http://localhost:$(env_value "$TARGET_DIR" MAILPIT_PORT)  (buzón de desarrollo)
 
   Admin inicial $(env_value "$TARGET_DIR" SEED_ADMIN_EMAIL)
   Contraseña    definida en $TARGET_DIR/.env (SEED_ADMIN_PASSWORD)

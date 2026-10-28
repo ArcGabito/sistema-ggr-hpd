@@ -155,6 +155,7 @@ CLIENT_PORT="$(env_value CLIENT_PORT)"
 SERVER_PORT="$(env_value SERVER_PORT)"
 DATABASE_PORT="$(env_value DATABASE_PORT)"
 SEED_ADMIN_EMAIL="$(env_value SEED_ADMIN_EMAIL)"
+MAILPIT_PORT="$(env_value MAILPIT_PORT)"
 
 wait_for_api "http://localhost:${SERVER_PORT:-5040}/health"
 docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" ps
@@ -165,6 +166,7 @@ cat <<INFO
   Ingresar      http://localhost:${CLIENT_PORT:-3000}/ingresar
   API           http://localhost:${SERVER_PORT:-5040}  (OpenAPI: /openapi/v1.json)
   SQL Server    localhost,${DATABASE_PORT:-1433}  (usuario sa)
+  Correos       http://localhost:${MAILPIT_PORT:-8025}  (buzón de desarrollo)
 
   Admin inicial ${SEED_ADMIN_EMAIL}
   Contraseña    definida en .env (SEED_ADMIN_PASSWORD)

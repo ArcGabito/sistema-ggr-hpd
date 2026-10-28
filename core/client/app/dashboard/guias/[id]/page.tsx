@@ -1,21 +1,24 @@
 "use client";
 
 import { use, useState } from "react";
-import { ArrowLeft, Ban, Printer, Send } from "lucide-react";
+import { ArrowLeft, Ban, Download, Mail, Printer, Send } from "lucide-react";
 import { sileo } from "sileo";
 import { api } from "@/app/lib/api";
 import { useApi } from "@/app/lib/use-api";
 import { formatDate, formatNumber, transferReasonLabel } from "@/app/lib/format";
 import { company } from "@/app/lib/site-data";
-import type { GuideDetail, GuideStatus } from "@/app/lib/types";
-import { Button, ButtonLink } from "@/app/components/ui/button";
+import type { GuideDetail, GuideEmail, GuideStatus } from "@/app/lib/types";
+import { Button, ButtonLink, buttonClass } from "@/app/components/ui/button";
 import { Card, ErrorState, GuideStatusBadge, Loading, td, th } from "@/app/components/dashboard/ui";
 import { LogoMark } from "@/app/components/site/logo";
+import { GuideEmailHistory, GuideEmailPanel } from "@/app/components/dashboard/guide-email";
 
 export default function GuideDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { data: guide, error, loading, reload, setData } = useApi<GuideDetail>(`remission-guides/${Number(id)}`);
   const [pending, setPending] = useState<GuideStatus | null>(null);
+  const [emailOpen, setEmailOpen] = useState(false);
+  const emails = useApi<GuideEmail[]>(`remission-guides/${Number(id)}/emails`);
 
   const changeStatus = async (status: GuideStatus) => {
     if (status === "Cancelled" && !window.confirm("¿Anular esta guía? Esta acción no se puede deshacer.")) return;
@@ -36,6 +39,7 @@ export default function GuideDetailPage({ params }: { params: Promise<{ id: stri
 
   const canIssue = guide.status === "Draft";
   const canCancel = guide.status === "Draft" || (guide.status === "Issued" && !guide.dispatchCode);
+  const canEmail = guide.status !== "Draft" && guide.status !== "Cancelled";
 
   return (
     <div className="space-y-6">
@@ -46,6 +50,17 @@ export default function GuideDetailPage({ params }: { params: Promise<{ id: stri
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={() => window.print()}>
             <Printer className="size-4" aria-hidden /> Imprimir
+          </Button>
+          <a href={`/api/backend/remission-guides/${guide.id}/pdf`} download className={buttonClass("outline")}>
+            <Download className="size-4" aria-hidden /> PDF
+          </a>
+          <Button
+            variant="outline"
+            disabled={!canEmail}
+            title={canEmail ? undefined : "Emite la guía para poder enviarla"}
+            onClick={() => setEmailOpen(true)}
+          >
+            <Mail className="size-4" aria-hidden /> Enviar al cliente
           </Button>
           {canCancel ? (
             <Button variant="danger" loading={pending === "Cancelled"} disabled={!!pending} onClick={() => changeStatus("Cancelled")}>
@@ -146,6 +161,17 @@ export default function GuideDetailPage({ params }: { params: Promise<{ id: stri
           </table>
         </div>
       </Card>
+
+      <GuideEmailHistory emails={emails.data} />
+      <GuideEmailPanel
+        guide={guide}
+        open={emailOpen}
+        onClose={() => setEmailOpen(false)}
+        onSent={(sent) => {
+          emails.setData((current) => [sent, ...(current ?? [])]);
+          if (!guide.client.email) setData({ ...guide, client: { ...guide.client, email: sent.to } });
+        }}
+      />
     </div>
   );
 }

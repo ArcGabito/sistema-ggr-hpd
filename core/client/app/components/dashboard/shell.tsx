@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { sileo } from "sileo";
-import { CarFront, FileText, LayoutDashboard, LogOut, Menu, Truck, Users, X } from "lucide-react";
+import { CarFront, FileText, Inbox, LayoutDashboard, LogOut, Menu, Newspaper, Truck, Users, X } from "lucide-react";
 import { useApi } from "@/app/lib/use-api";
 import type { User } from "@/app/lib/types";
 import { Logo } from "@/app/components/site/logo";
@@ -16,6 +16,8 @@ const nav = [
   { href: "/dashboard/despachos", label: "Despachos", icon: Truck },
   { href: "/dashboard/clientes", label: "Clientes", icon: Users },
   { href: "/dashboard/flota", label: "Flota", icon: CarFront },
+  { href: "/dashboard/solicitudes", label: "Solicitudes", icon: Inbox },
+  { href: "/dashboard/blog", label: "Blog", icon: Newspaper, roles: ["Admin", "Supervisor"] },
 ];
 
 const roleLabel: Record<User["role"], string> = { Admin: "Administrador", Supervisor: "Supervisor", Operator: "Operador" };
@@ -45,7 +47,9 @@ export function DashboardShell({ children }: { children: ReactNode }) {
       </Link>
       <p className="mt-8 px-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-400">Gestión</p>
       <nav aria-label="Dashboard" className="mt-3 flex flex-col gap-1">
-        {nav.map((item) => {
+        {nav
+          .filter((item) => !("roles" in item) || (user && item.roles?.includes(user.role)))
+          .map((item) => {
           const active = isActive(item.href);
           return (
             <Link
