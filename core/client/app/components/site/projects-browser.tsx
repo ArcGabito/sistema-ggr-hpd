@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Award, MapPin, Search } from "lucide-react";
-import { projectCategories, type ProjectCategory } from "@/lib/content";
+import { projectCategories, type ProjectCategory } from "@/app/lib/content";
 
 const normalize = (value: string) => value.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 

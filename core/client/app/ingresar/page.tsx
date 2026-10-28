@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
-import { Logo } from "@/components/site/logo";
-import { FacadeArt } from "@/components/site/facade-art";
+import { Logo } from "@/app/components/site/logo";
+import { FacadeArt } from "@/app/components/site/facade-art";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {

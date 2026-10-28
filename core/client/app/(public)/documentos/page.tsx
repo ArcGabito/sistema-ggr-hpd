@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/site/page-hero";
-import { DocumentLibrary } from "@/components/site/document-library";
+import { PageHero } from "@/app/components/site/page-hero";
+import { DocumentLibrary } from "@/app/components/site/document-library";
 
 export const metadata: Metadata = {
   title: "Documentos",

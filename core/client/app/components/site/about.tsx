@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { stats } from "@/lib/site-data";
+import { stats } from "@/app/lib/site-data";
 import { ClientMarquee } from "./client-logos";
 import { Counter, Reveal } from "./reveal";
 

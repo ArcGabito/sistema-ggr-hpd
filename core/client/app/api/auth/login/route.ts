@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { loginSchema } from "@/lib/schemas";
-import { SESSION_COOKIE, apiUrl, cookieSecure } from "@/lib/session";
+import { loginSchema } from "@/app/lib/schemas";
+import { SESSION_COOKIE, apiUrl, cookieSecure } from "@/app/lib/session";
 
 export async function POST(request: NextRequest) {
   const parsed = loginSchema.safeParse(await request.json().catch(() => null));

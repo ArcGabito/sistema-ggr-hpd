@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { catalog } from "@/lib/site-data";
+import { catalog } from "@/app/lib/site-data";
 import { FacadeArt } from "./facade-art";
 import { Reveal } from "./reveal";
 

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Award, Leaf, ShieldCheck, Sparkles } from "lucide-react";
-import { PageHero } from "@/components/site/page-hero";
-import { Reveal } from "@/components/site/reveal";
-import { Process } from "@/components/site/process";
-import { Commitments } from "@/components/site/commitments";
-import { companyFigures, memberships, pillars, sustainability } from "@/lib/content";
-import { ClientGrid } from "@/components/site/client-logos";
+import { PageHero } from "@/app/components/site/page-hero";
+import { Reveal } from "@/app/components/site/reveal";
+import { Process } from "@/app/components/site/process";
+import { Commitments } from "@/app/components/site/commitments";
+import { companyFigures, memberships, pillars, sustainability } from "@/app/lib/content";
+import { ClientGrid } from "@/app/components/site/client-logos";
 
 export const metadata: Metadata = {
   title: "Nosotros",

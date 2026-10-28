@@ -6,9 +6,9 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { sileo } from "sileo";
 import { CarFront, FileText, LayoutDashboard, LogOut, Menu, Truck, Users, X } from "lucide-react";
-import { useApi } from "@/lib/use-api";
-import type { User } from "@/lib/types";
-import { Logo } from "@/components/site/logo";
+import { useApi } from "@/app/lib/use-api";
+import type { User } from "@/app/lib/types";
+import { Logo } from "@/app/components/site/logo";
 
 const nav = [
   { href: "/dashboard", label: "Resumen", icon: LayoutDashboard },

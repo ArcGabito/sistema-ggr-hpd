@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { ChevronLeft, ChevronRight, Inbox, LoaderCircle } from "lucide-react";
-import { dispatchStatusLabel, guideStatusLabel } from "@/lib/format";
-import type { DispatchStatus, GuideStatus } from "@/lib/types";
+import { dispatchStatusLabel, guideStatusLabel } from "@/app/lib/format";
+import type { DispatchStatus, GuideStatus } from "@/app/lib/types";
 
 export function PageHeader({ title, description, actions }: { title: string; description?: string; actions?: ReactNode }) {
   return (

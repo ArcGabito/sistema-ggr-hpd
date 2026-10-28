@@ -4,10 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { sileo } from "sileo";
 import { Mail, Phone } from "lucide-react";
-import { contactSchema, type ContactInput } from "@/lib/schemas";
-import { company } from "@/lib/site-data";
-import { readError } from "@/lib/api";
-import { Button } from "@/components/ui/button";
+import { contactSchema, type ContactInput } from "@/app/lib/schemas";
+import { company } from "@/app/lib/site-data";
+import { readError } from "@/app/lib/api";
+import { Button } from "@/app/components/ui/button";
 import { Reveal } from "./reveal";
 
 const darkInput =

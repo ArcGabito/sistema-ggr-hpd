@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { SESSION_COOKIE, isTokenAlive } from "@/lib/session";
+import { SESSION_COOKIE, isTokenAlive } from "@/app/lib/session";
 
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;

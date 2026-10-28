@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
-import { ToastProvider } from "@/components/ui/toast-provider";
+import { ToastProvider } from "@/app/components/ui/toast-provider";
 import "./globals.css";
 
 const manrope = Manrope({

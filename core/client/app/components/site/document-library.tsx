@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Download, FileText, FolderOpen } from "lucide-react";
-import { documentCategories, documents, type DocumentCategory } from "@/lib/content";
-import { company } from "@/lib/site-data";
+import { documentCategories, documents, type DocumentCategory } from "@/app/lib/content";
+import { company } from "@/app/lib/site-data";
 
 const materials = ["Todos", "Vidrios", "Aluminios"] as const;
 

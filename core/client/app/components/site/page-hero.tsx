@@ -1,4 +1,4 @@
-import type { FacadeVariant } from "@/lib/site-data";
+import type { FacadeVariant } from "@/app/lib/site-data";
 import { FacadeArt } from "./facade-art";
 import { Reveal } from "./reveal";
 

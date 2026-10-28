@@ -1,5 +1,5 @@
 import { Quote } from "lucide-react";
-import { commitments } from "@/lib/site-data";
+import { commitments } from "@/app/lib/site-data";
 import { LogoMark } from "./logo";
 import { Reveal } from "./reveal";
 

@@ -1,5 +1,5 @@
-import { Header } from "@/components/site/header";
-import { Footer } from "@/components/site/footer";
+import { Header } from "@/app/components/site/header";
+import { Footer } from "@/app/components/site/footer";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (

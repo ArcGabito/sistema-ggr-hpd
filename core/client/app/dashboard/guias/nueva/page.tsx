@@ -6,15 +6,15 @@ import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { sileo } from "sileo";
 import { Plus, Trash2 } from "lucide-react";
-import { api } from "@/lib/api";
-import { useApi } from "@/lib/use-api";
-import { guideSchema, transferReasons, type GuideInput } from "@/lib/schemas";
-import { formatNumber, productCategoryLabel, todayInLima, transferReasonLabel } from "@/lib/format";
-import type { Client, GuideDetail, Product, Site } from "@/lib/types";
-import { Button, ButtonLink } from "@/components/ui/button";
-import { Field, Input, Select, Textarea } from "@/components/ui/field";
-import { Card, CardHeader, PageHeader } from "@/components/dashboard/ui";
-import { ClientPicker } from "@/components/dashboard/client-picker";
+import { api } from "@/app/lib/api";
+import { useApi } from "@/app/lib/use-api";
+import { guideSchema, transferReasons, type GuideInput } from "@/app/lib/schemas";
+import { formatNumber, productCategoryLabel, todayInLima, transferReasonLabel } from "@/app/lib/format";
+import type { Client, GuideDetail, Product, Site } from "@/app/lib/types";
+import { Button, ButtonLink } from "@/app/components/ui/button";
+import { Field, Input, Select, Textarea } from "@/app/components/ui/field";
+import { Card, CardHeader, PageHeader } from "@/app/components/dashboard/ui";
+import { ClientPicker } from "@/app/components/dashboard/client-picker";
 
 const emptyItem = { productId: 0, description: "", quantity: 1, weightKg: 0 };
 

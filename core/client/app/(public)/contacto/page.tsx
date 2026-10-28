@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/site/page-hero";
-import { ContactSection } from "@/components/site/contact-form";
-import { Sites } from "@/components/site/sites";
+import { PageHero } from "@/app/components/site/page-hero";
+import { ContactSection } from "@/app/components/site/contact-form";
+import { Sites } from "@/app/components/site/sites";
 
 export const metadata: Metadata = {
   title: "Contacto",

@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
-import { navigation } from "@/lib/site-data";
-import { ButtonLink } from "@/components/ui/button";
+import { navigation } from "@/app/lib/site-data";
+import { ButtonLink } from "@/app/components/ui/button";
 import { Logo } from "./logo";
 
 export function Header() {

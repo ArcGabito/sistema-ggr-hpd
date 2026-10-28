@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { contactSchema } from "@/lib/schemas";
-import { apiUrl } from "@/lib/session";
+import { contactSchema } from "@/app/lib/schemas";
+import { apiUrl } from "@/app/lib/session";
 
 export async function POST(request: NextRequest) {
   const parsed = contactSchema.safeParse(await request.json().catch(() => null));

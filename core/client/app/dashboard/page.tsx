@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { ArrowRight, CalendarClock, FilePen, FilePlus2, FileText, PackageCheck, Truck, Users } from "lucide-react";
-import { useApi } from "@/lib/use-api";
-import { formatDate, formatDateTime, formatNumber } from "@/lib/format";
-import type { DashboardSummary } from "@/lib/types";
-import { ButtonLink } from "@/components/ui/button";
-import { useCurrentUser } from "@/components/dashboard/shell";
+import { useApi } from "@/app/lib/use-api";
+import { formatDate, formatDateTime, formatNumber } from "@/app/lib/format";
+import type { DashboardSummary } from "@/app/lib/types";
+import { ButtonLink } from "@/app/components/ui/button";
+import { useCurrentUser } from "@/app/components/dashboard/shell";
 import {
   Card,
   CardHeader,
@@ -18,7 +18,7 @@ import {
   Loading,
   PageHeader,
   StatCard,
-} from "@/components/dashboard/ui";
+} from "@/app/components/dashboard/ui";
 
 export default function DashboardPage() {
   const user = useCurrentUser();

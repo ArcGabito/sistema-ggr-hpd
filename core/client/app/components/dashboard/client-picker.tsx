@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Building2, LoaderCircle, Search, X } from "lucide-react";
-import { api } from "@/lib/api";
-import type { Client, Paged } from "@/lib/types";
+import { api } from "@/app/lib/api";
+import type { Client, Paged } from "@/app/lib/types";
 
 export function ClientPicker({
   value,

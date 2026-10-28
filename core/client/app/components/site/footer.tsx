@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { company, navigation, sites, socials } from "@/lib/site-data";
+import { company, navigation, sites, socials } from "@/app/lib/site-data";
 import { Logo } from "./logo";
 
 export function Footer() {

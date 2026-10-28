@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { ButtonLink } from "@/components/ui/button";
-import { company } from "@/lib/site-data";
+import { ButtonLink } from "@/app/components/ui/button";
+import { company } from "@/app/lib/site-data";
 import { FacadeArt } from "./facade-art";
 
 export function Hero() {

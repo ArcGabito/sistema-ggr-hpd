@@ -7,11 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { sileo } from "sileo";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
-import { loginSchema, type LoginInput } from "@/lib/schemas";
-import { readError } from "@/lib/api";
-import type { User } from "@/lib/types";
-import { Field, Input } from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
+import { loginSchema, type LoginInput } from "@/app/lib/schemas";
+import { readError } from "@/app/lib/api";
+import type { User } from "@/app/lib/types";
+import { Field, Input } from "@/app/components/ui/field";
+import { Button } from "@/app/components/ui/button";
 
 /** Solo se permiten redirecciones internas del dashboard. */
 function safeNext(value: string | null) {

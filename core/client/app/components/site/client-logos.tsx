@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { clients } from "@/lib/site-data";
-import logoSizes from "@/lib/client-logos.json";
+import { clients } from "@/app/lib/site-data";
+import logoSizes from "@/app/lib/client-logos.json";
 
 type Client = (typeof clients)[number];
 

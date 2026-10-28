@@ -1,4 +1,4 @@
-import type { FacadeVariant } from "@/lib/site-data";
+import type { FacadeVariant } from "@/app/lib/site-data";
 
 type Point = [number, number];
 /** Proyección de una fachada: (u, v) ∈ [0,1]² → punto en pantalla. */

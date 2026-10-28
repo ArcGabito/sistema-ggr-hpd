@@ -5,12 +5,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CalendarClock, MapPin, Truck, UserRound } from "lucide-react";
 import { sileo } from "sileo";
-import { api } from "@/lib/api";
-import { useApi } from "@/lib/use-api";
-import { dispatchStatusLabel, formatDateTime, formatNumber } from "@/lib/format";
-import type { Dispatch, DispatchStatus } from "@/lib/types";
-import { Button, ButtonLink } from "@/components/ui/button";
-import { Card, DispatchStatusBadge, EmptyState, ErrorState, GuideStatusBadge, Loading, PageHeader } from "@/components/dashboard/ui";
+import { api } from "@/app/lib/api";
+import { useApi } from "@/app/lib/use-api";
+import { dispatchStatusLabel, formatDateTime, formatNumber } from "@/app/lib/format";
+import type { Dispatch, DispatchStatus } from "@/app/lib/types";
+import { Button, ButtonLink } from "@/app/components/ui/button";
+import { Card, DispatchStatusBadge, EmptyState, ErrorState, GuideStatusBadge, Loading, PageHeader } from "@/app/components/dashboard/ui";
 
 const filters: (DispatchStatus | "all")[] = ["all", "Scheduled", "Loading", "InTransit", "Completed", "Cancelled"];
 

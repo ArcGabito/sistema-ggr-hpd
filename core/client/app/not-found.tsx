@@ -1,5 +1,5 @@
-import { ButtonLink } from "@/components/ui/button";
-import { LogoMark } from "@/components/site/logo";
+import { ButtonLink } from "@/app/components/ui/button";
+import { LogoMark } from "@/app/components/site/logo";
 
 export default function NotFound() {
   return (

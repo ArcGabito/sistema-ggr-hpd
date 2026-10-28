@@ -1,5 +1,5 @@
 import { MapPin, Navigation } from "lucide-react";
-import { sites } from "@/lib/site-data";
+import { sites } from "@/app/lib/site-data";
 import { Reveal } from "./reveal";
 
 export function Sites() {

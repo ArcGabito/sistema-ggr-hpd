@@ -3,14 +3,14 @@
 import { use, useState } from "react";
 import { ArrowLeft, Ban, Printer, Send } from "lucide-react";
 import { sileo } from "sileo";
-import { api } from "@/lib/api";
-import { useApi } from "@/lib/use-api";
-import { formatDate, formatNumber, transferReasonLabel } from "@/lib/format";
-import { company } from "@/lib/site-data";
-import type { GuideDetail, GuideStatus } from "@/lib/types";
-import { Button, ButtonLink } from "@/components/ui/button";
-import { Card, ErrorState, GuideStatusBadge, Loading, td, th } from "@/components/dashboard/ui";
-import { LogoMark } from "@/components/site/logo";
+import { api } from "@/app/lib/api";
+import { useApi } from "@/app/lib/use-api";
+import { formatDate, formatNumber, transferReasonLabel } from "@/app/lib/format";
+import { company } from "@/app/lib/site-data";
+import type { GuideDetail, GuideStatus } from "@/app/lib/types";
+import { Button, ButtonLink } from "@/app/components/ui/button";
+import { Card, ErrorState, GuideStatusBadge, Loading, td, th } from "@/app/components/dashboard/ui";
+import { LogoMark } from "@/app/components/site/logo";
 
 export default function GuideDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);

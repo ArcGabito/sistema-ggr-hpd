@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FilePlus2, Search } from "lucide-react";
-import { useApi } from "@/lib/use-api";
-import { formatDate, formatNumber, guideStatusLabel } from "@/lib/format";
-import type { GuideStatus, GuideSummary, Paged } from "@/lib/types";
-import { ButtonLink } from "@/components/ui/button";
-import { Card, EmptyState, ErrorState, GuideStatusBadge, Loading, PageHeader, Pagination, td, th } from "@/components/dashboard/ui";
+import { useApi } from "@/app/lib/use-api";
+import { formatDate, formatNumber, guideStatusLabel } from "@/app/lib/format";
+import type { GuideStatus, GuideSummary, Paged } from "@/app/lib/types";
+import { ButtonLink } from "@/app/components/ui/button";
+import { Card, EmptyState, ErrorState, GuideStatusBadge, Loading, PageHeader, Pagination, td, th } from "@/app/components/dashboard/ui";
 
 const filters: (GuideStatus | "all")[] = ["all", "Draft", "Issued", "InTransit", "Delivered", "Cancelled"];
 

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { ArrowUpRight } from "lucide-react";
-import { PageHero } from "@/components/site/page-hero";
-import { FacadeArt } from "@/components/site/facade-art";
-import { Reveal } from "@/components/site/reveal";
-import { productCategories } from "@/lib/content";
+import { PageHero } from "@/app/components/site/page-hero";
+import { FacadeArt } from "@/app/components/site/facade-art";
+import { Reveal } from "@/app/components/site/reveal";
+import { productCategories } from "@/app/lib/content";
 
 export const metadata: Metadata = {
   title: "Productos",

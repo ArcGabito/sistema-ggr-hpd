@@ -1,5 +1,5 @@
 import { ClipboardList, Factory, FileCheck2, HardHat, MessagesSquare } from "lucide-react";
-import { processSteps } from "@/lib/site-data";
+import { processSteps } from "@/app/lib/site-data";
 import { FacadeArt } from "./facade-art";
 import { Reveal } from "./reveal";
 

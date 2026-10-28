@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { SESSION_COOKIE, apiUrl } from "@/lib/session";
+import { SESSION_COOKIE, apiUrl } from "@/app/lib/session";
 
 type Context = { params: Promise<{ path: string[] }> };
 

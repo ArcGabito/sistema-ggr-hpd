@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DashboardShell } from "@/components/dashboard/shell";
+import { DashboardShell } from "@/app/components/dashboard/shell";
 
 export const metadata: Metadata = {
   title: { default: "Dashboard", template: "%s | Sistema GGR" },

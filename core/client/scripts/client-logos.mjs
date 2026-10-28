@@ -1,6 +1,6 @@
 // Genera los logos de clientes que usa el sitio a partir de los originales (.svg / .webp) de
 // public/assets/clients: rasteriza, recorta el margen vacío y escribe un .png por cliente, más
-// lib/client-logos.json con sus dimensiones. Los originales no se modifican.
+// app/lib/client-logos.json con sus dimensiones. Los originales no se modifican.
 // Uso: npm run logos
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { extname, basename, join } from "node:path";
@@ -30,4 +30,4 @@ for (const file of sources) {
   console.log(`${file.padEnd(26)} → ${output} ${width}x${height}`);
 }
 
-writeFileSync("lib/client-logos.json", `${JSON.stringify(manifest, null, 2)}\n`);
+writeFileSync("app/lib/client-logos.json", `${JSON.stringify(manifest, null, 2)}\n`);

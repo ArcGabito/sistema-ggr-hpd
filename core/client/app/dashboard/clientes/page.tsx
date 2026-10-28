@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
-import { useApi } from "@/lib/use-api";
-import type { Client, Paged } from "@/lib/types";
-import { Card, EmptyState, ErrorState, Loading, PageHeader, Pagination, td, th } from "@/components/dashboard/ui";
+import { useApi } from "@/app/lib/use-api";
+import type { Client, Paged } from "@/app/lib/types";
+import { Card, EmptyState, ErrorState, Loading, PageHeader, Pagination, td, th } from "@/app/components/dashboard/ui";
 
 export default function ClientsPage() {
   const [search, setSearch] = useState("");

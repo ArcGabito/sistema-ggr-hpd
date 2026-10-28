@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/site/page-hero";
-import { ProjectsBrowser } from "@/components/site/projects-browser";
+import { PageHero } from "@/app/components/site/page-hero";
+import { ProjectsBrowser } from "@/app/components/site/projects-browser";
 
 export const metadata: Metadata = {
   title: "Proyectos",
