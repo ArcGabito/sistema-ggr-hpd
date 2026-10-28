@@ -8,6 +8,9 @@ import { RichText } from "@/app/components/site/rich-text";
 import { getPublishedPost } from "@/app/lib/blog";
 import { pageMetadata } from "@/app/lib/seo";
 
+// La API puede estar en reposo (escala a cero) y su base en pausa: el primer pedido tarda más.
+export const maxDuration = 60;
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

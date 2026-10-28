@@ -1,6 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, apiUrl } from "@/app/lib/session";
 
+// La API puede estar en reposo (escala a cero) y su base en pausa: el primer pedido tarda más.
+export const maxDuration = 60;
+
 type Context = { params: Promise<{ path: string[] }> };
 
 // Solo se reenvían rutas conocidas del backend; evita usar el proxy para alcanzar otros endpoints.

@@ -3,6 +3,9 @@ import { connection } from "next/server";
 import { getPublishedPosts } from "@/app/lib/blog";
 import { siteUrl } from "@/app/lib/seo";
 
+// La API puede estar en reposo (escala a cero) y su base en pausa: el primer pedido tarda más.
+export const maxDuration = 60;
+
 const routes: { path: string; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"]; priority: number }[] = [
   { path: "", changeFrequency: "monthly", priority: 1 },
   { path: "/productos", changeFrequency: "monthly", priority: 0.9 },

@@ -24,8 +24,9 @@ public static class DbSeeder
         var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
         var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(nameof(DbSeeder));
 
-        // SQL Server tarda en aceptar conexiones cuando el contenedor recién arranca.
-        const int maxAttempts = 10;
+        // SQL Server tarda en aceptar conexiones cuando el contenedor recién arranca, y Azure SQL
+        // serverless puede tardar alrededor de un minuto en reanudarse si estaba en pausa.
+        var maxAttempts = configuration.GetValue("Database:StartupRetries", 24);
         for (var attempt = 1; ; attempt++)
         {
             try

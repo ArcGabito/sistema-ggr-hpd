@@ -9,6 +9,9 @@ import { getPublishedPosts, postHref } from "@/app/lib/blog";
 import { pageMetadata } from "@/app/lib/seo";
 import type { BlogPostSummary } from "@/app/lib/types";
 
+// La API puede estar en reposo (escala a cero) y su base en pausa: el primer pedido tarda más.
+export const maxDuration = 60;
+
 export const metadata: Metadata = pageMetadata({
   title: "Blog",
   description: "Artículos sobre vidrio templado, laminado, insulado y Low-E, y tendencias del vidrio en la arquitectura.",

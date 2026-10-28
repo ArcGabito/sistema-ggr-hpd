@@ -2,6 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { contactSchema } from "@/app/lib/schemas";
 import { apiUrl } from "@/app/lib/session";
 
+// La API puede estar en reposo (escala a cero) y su base en pausa: el primer pedido tarda más.
+export const maxDuration = 60;
+
 export async function POST(request: NextRequest) {
   const parsed = contactSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {

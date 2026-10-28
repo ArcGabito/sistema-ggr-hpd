@@ -49,7 +49,15 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddSingleton<IGuidePdfGenerator, GuidePdfGenerator>();
-builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.Configure<MailpitApiOptions>(builder.Configuration.GetSection(MailpitApiOptions.SectionName));
+if (string.IsNullOrWhiteSpace(builder.Configuration["MailpitApi:Url"]))
+{
+    builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+}
+else
+{
+    builder.Services.AddHttpClient<IEmailSender, MailpitApiEmailSender>(client => client.Timeout = TimeSpan.FromSeconds(60));
+}
 builder.Services
     .AddOptions<SmtpOptions>()
     .Bind(builder.Configuration.GetSection(SmtpOptions.SectionName))
