@@ -30,7 +30,7 @@ public class DashboardController(AppDbContext context) : ControllerBase
             .Include(g => g.OriginSite)
             .Include(g => g.Dispatch)
             .OrderByDescending(g => g.CreatedAt)
-            .Take(6)
+            .Take(15)
             .ToListAsync(cancellationToken);
 
         var upcoming = await dispatches
@@ -40,7 +40,7 @@ public class DashboardController(AppDbContext context) : ControllerBase
             .Include(d => d.Guides).ThenInclude(g => g.Client)
             .Where(d => d.Status == DispatchStatus.Scheduled || d.Status == DispatchStatus.Loading || d.Status == DispatchStatus.InTransit)
             .OrderBy(d => d.ScheduledAt)
-            .Take(5)
+            .Take(10)
             .AsSplitQuery()
             .ToListAsync(cancellationToken);
 

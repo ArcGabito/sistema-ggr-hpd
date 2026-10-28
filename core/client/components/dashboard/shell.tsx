@@ -119,7 +119,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
               <Menu className="size-5" />
             </button>
           </header>
-          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">{children}</main>
+          <main className="flex w-full flex-1 flex-col px-4 py-8 sm:px-6 lg:px-10 lg:py-10">{children}</main>
         </div>
       </div>
     </UserContext.Provider>

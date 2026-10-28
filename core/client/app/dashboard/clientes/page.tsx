@@ -19,12 +19,12 @@ export default function ClientsPage() {
     return () => clearTimeout(id);
   }, [search]);
 
-  const params = new URLSearchParams({ page: String(page), pageSize: "20" });
+  const params = new URLSearchParams({ page: String(page), pageSize: "25" });
   if (term) params.set("search", term);
   const { data, error, loading, reload } = useApi<Paged<Client>>(`clients?${params}`);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-1 flex-col gap-6">
       <PageHeader title="Clientes" description="Destinatarios disponibles para las guías de remisión." />
 
       <label className="relative block max-w-md">
@@ -38,15 +38,16 @@ export default function ClientsPage() {
         />
       </label>
 
-      <Card className="overflow-hidden">
+      <Card className="flex min-h-96 flex-1 flex-col overflow-hidden">
         {loading && !data ? <Loading /> : null}
         {error ? <ErrorState message={error} onRetry={reload} /> : null}
         {data && data.items.length === 0 ? <EmptyState title="Sin resultados" description="Prueba con otro término de búsqueda." /> : null}
         {data && data.items.length > 0 ? (
           <>
-            <div className="overflow-x-auto">
+            <div className="relative min-h-64 flex-1">
+              <div className="absolute inset-0 overflow-auto">
               <table className="w-full min-w-[760px] text-sm">
-                <thead className="bg-ink-50/70">
+                <thead className="sticky top-0 z-10 bg-ink-50 shadow-[inset_0_-1px_0_var(--color-ink-100)]">
                   <tr>
                     <th className={th}>Cliente</th>
                     <th className={th}>RUC</th>
@@ -74,6 +75,7 @@ export default function ClientsPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
             <Pagination page={data.page} pageSize={data.pageSize} total={data.totalCount} onChange={setPage} />
           </>

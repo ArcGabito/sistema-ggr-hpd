@@ -40,7 +40,7 @@ export default function DispatchesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-1 flex-col gap-6">
       <PageHeader
         title="Despachos"
         description="Coordina la carga, salida y entrega de mercancía de la sede."
@@ -69,12 +69,12 @@ export default function DispatchesPage() {
       {loading && !data ? <Loading /> : null}
       {error ? <ErrorState message={error} onRetry={reload} /> : null}
       {data && data.length === 0 ? (
-        <Card>
+        <Card className="flex flex-1 flex-col">
           <EmptyState title="No hay despachos" description="Programa un despacho y asígnale guías emitidas." />
         </Card>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
         {data?.map((dispatch, i) => {
           const usage = dispatch.vehicleCapacityKg > 0 ? Math.min(100, (dispatch.totalWeightKg / dispatch.vehicleCapacityKg) * 100) : 0;
           const step = nextStep[dispatch.status];

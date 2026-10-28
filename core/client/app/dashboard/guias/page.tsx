@@ -25,13 +25,13 @@ export default function GuidesPage() {
     return () => clearTimeout(id);
   }, [search]);
 
-  const params = new URLSearchParams({ page: String(page), pageSize: "15" });
+  const params = new URLSearchParams({ page: String(page), pageSize: "20" });
   if (status !== "all") params.set("status", status);
   if (term) params.set("search", term);
   const { data, error, loading, reload } = useApi<Paged<GuideSummary>>(`remission-guides?${params}`);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-1 flex-col gap-6">
       <PageHeader
         title="Guías de remisión"
         description="Emite, consulta y controla el estado de las guías de la sede."
@@ -72,15 +72,16 @@ export default function GuidesPage() {
         </label>
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="flex min-h-96 flex-1 flex-col overflow-hidden">
         {loading && !data ? <Loading /> : null}
         {error ? <ErrorState message={error} onRetry={reload} /> : null}
         {data && data.items.length === 0 ? <EmptyState title="No hay guías" description="Ajusta los filtros o crea una nueva guía." /> : null}
         {data && data.items.length > 0 ? (
           <>
-            <div className="overflow-x-auto">
+            <div className="relative min-h-64 flex-1">
+              <div className="absolute inset-0 overflow-auto">
               <table className="w-full min-w-[820px] text-sm">
-                <thead className="bg-ink-50/70">
+                <thead className="sticky top-0 z-10 bg-ink-50 shadow-[inset_0_-1px_0_var(--color-ink-100)]">
                   <tr>
                     <th className={th}>N° guía</th>
                     <th className={th}>Cliente</th>
@@ -116,6 +117,7 @@ export default function GuidesPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
             <Pagination page={data.page} pageSize={data.pageSize} total={data.totalCount} onChange={setPage} />
           </>

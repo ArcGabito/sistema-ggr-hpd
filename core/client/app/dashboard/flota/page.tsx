@@ -21,11 +21,11 @@ export default function FleetPage() {
   const drivers = useApi<Driver[]>("drivers");
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-1 flex-col gap-6">
       <PageHeader title="Flota" description="Vehículos y conductores disponibles para los despachos." />
 
-      <div className="grid gap-6 xl:grid-cols-2">
-        <Card className="overflow-hidden">
+      <div className="grid flex-1 gap-6 xl:grid-cols-2">
+        <Card className="flex flex-col overflow-hidden">
           <CardHeader title="Vehículos" />
           {canEdit ? <VehicleForm onCreated={vehicles.reload} /> : null}
           {vehicles.loading && !vehicles.data ? <Loading /> : null}
@@ -56,7 +56,7 @@ export default function FleetPage() {
           ) : null}
         </Card>
 
-        <Card className="overflow-hidden">
+        <Card className="flex flex-col overflow-hidden">
           <CardHeader title="Conductores" />
           {canEdit ? <DriverForm onCreated={drivers.reload} /> : null}
           {drivers.loading && !drivers.data ? <Loading /> : null}

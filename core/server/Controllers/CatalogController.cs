@@ -33,7 +33,8 @@ public class CatalogController(AppDbContext context) : ControllerBase
 
         var total = await query.CountAsync(cancellationToken);
         var items = await query
-            .OrderBy(c => c.CompanyName ?? c.LegalName)
+            .OrderBy(c => c.CompanyName == null && c.LegalName == null)
+            .ThenBy(c => c.CompanyName ?? c.LegalName)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);

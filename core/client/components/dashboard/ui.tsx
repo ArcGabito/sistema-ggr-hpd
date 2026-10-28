@@ -47,12 +47,17 @@ export function StatCard({
   };
   const iconTones = { light: "bg-ink-900 text-white", sky: "bg-white/20 text-white", dark: "bg-white/10 text-sky-300" };
   return (
-    <div className={`rounded-[var(--radius-card)] p-5 ${tones[tone]}`}>
-      <span className={`grid size-10 place-items-center rounded-full ${iconTones[tone]}`}>
-        <Icon className="size-5" aria-hidden />
-      </span>
-      <p className="mt-5 text-3xl font-bold tracking-tight">{value}</p>
-      <p className={`mt-1 text-sm ${tone === "light" ? "text-ink-500" : "text-white/80"}`}>{label}</p>
+    // Horizontal solo cuando la propia tarjeta tiene ancho para la etiqueta completa.
+    <div className={`@container rounded-[var(--radius-card)] p-5 ${tones[tone]}`}>
+      <div className="flex flex-col items-start gap-3 @[14rem]:flex-row @[14rem]:items-center @[14rem]:gap-4">
+        <span className={`grid size-12 shrink-0 place-items-center rounded-full ${iconTones[tone]}`}>
+          <Icon className="size-5" aria-hidden />
+        </span>
+        <div className="min-w-0">
+          <p className="text-3xl font-bold leading-none tracking-tight">{value}</p>
+          <p className={`mt-1.5 text-sm leading-snug ${tone === "light" ? "text-ink-500" : "text-white/80"}`}>{label}</p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -85,7 +90,7 @@ export function DispatchStatusBadge({ status }: { status: DispatchStatus }) {
 
 export function Loading({ label = "Cargando…" }: { label?: string }) {
   return (
-    <div className="flex items-center justify-center gap-2 py-16 text-sm text-ink-400">
+    <div className="flex flex-1 items-center justify-center gap-2 py-16 text-sm text-ink-400">
       <LoaderCircle className="size-4 animate-spin" aria-hidden /> {label}
     </div>
   );
@@ -93,7 +98,7 @@ export function Loading({ label = "Cargando…" }: { label?: string }) {
 
 export function EmptyState({ title, description }: { title: string; description?: string }) {
   return (
-    <div className="flex flex-col items-center px-4 py-14 text-center">
+    <div className="flex h-full flex-1 flex-col items-center justify-center px-4 py-14 text-center">
       <span className="grid size-12 place-items-center rounded-full bg-sky-50 text-sky-600">
         <Inbox className="size-5" aria-hidden />
       </span>
@@ -105,7 +110,7 @@ export function EmptyState({ title, description }: { title: string; description?
 
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <div className="px-4 py-12 text-center text-sm">
+    <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 text-center text-sm">
       <p className="font-medium text-red-600">{message}</p>
       {onRetry ? (
         <button type="button" onClick={onRetry} className="mt-3 font-semibold text-ink-900 underline">
@@ -159,3 +164,15 @@ export function Pagination({
 
 export const th = "px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-ink-400";
 export const td = "px-5 py-3.5 align-top";
+
+/**
+ * Ocupa el espacio vertical que le queda al panel y desplaza su contenido por dentro, de modo que
+ * el panel llena la pantalla sin que una lista larga alargue la página.
+ */
+export function FillScroll({ children, minHeight = "min-h-64" }: { children: ReactNode; minHeight?: string }) {
+  return (
+    <div className={`relative flex-1 ${minHeight}`}>
+      <div className="absolute inset-0 flex flex-col overflow-y-auto">{children}</div>
+    </div>
+  );
+}

@@ -13,6 +13,7 @@ import {
   DispatchStatusBadge,
   EmptyState,
   ErrorState,
+  FillScroll,
   GuideStatusBadge,
   Loading,
   PageHeader,
@@ -24,7 +25,7 @@ export default function DashboardPage() {
   const { data, error, loading, reload } = useApi<DashboardSummary>("dashboard/summary");
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-1 flex-col gap-8">
       <PageHeader
         title={`Hola${user ? `, ${user.fullName.split(" ")[0]}` : ""}`}
         description="Resumen de guías de remisión y despachos de la sede."
@@ -56,8 +57,8 @@ export default function DashboardPage() {
             <StatCard label="Clientes registrados" value={formatNumber(data.clientsCount, 0)} icon={Users} />
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
-            <Card>
+          <div className="grid flex-1 gap-6 xl:grid-cols-[1.4fr_1fr]">
+            <Card className="flex min-h-80 flex-col overflow-hidden">
               <CardHeader
                 title="Últimas guías"
                 action={
@@ -66,6 +67,7 @@ export default function DashboardPage() {
                   </Link>
                 }
               />
+              <FillScroll>
               {data.recentGuides.length === 0 ? (
                 <EmptyState title="Aún no hay guías" description="Crea la primera guía de remisión de la sede." />
               ) : (
@@ -86,9 +88,10 @@ export default function DashboardPage() {
                   ))}
                 </ul>
               )}
+              </FillScroll>
             </Card>
 
-            <Card>
+            <Card className="flex min-h-80 flex-col overflow-hidden">
               <CardHeader
                 title="Próximos despachos"
                 action={
@@ -97,6 +100,7 @@ export default function DashboardPage() {
                   </Link>
                 }
               />
+              <FillScroll>
               {data.upcomingDispatches.length === 0 ? (
                 <EmptyState title="Sin despachos activos" description="Programa un despacho con las guías emitidas." />
               ) : (
@@ -117,6 +121,7 @@ export default function DashboardPage() {
                   ))}
                 </ul>
               )}
+              </FillScroll>
             </Card>
           </div>
         </>
