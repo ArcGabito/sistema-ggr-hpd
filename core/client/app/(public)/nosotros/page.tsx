@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/app/lib/seo";
 import { Award, Leaf, ShieldCheck, Sparkles } from "lucide-react";
 import { PageHero } from "@/app/components/site/page-hero";
 import { Reveal } from "@/app/components/site/reveal";
@@ -7,10 +8,11 @@ import { Commitments } from "@/app/components/site/commitments";
 import { companyFigures, memberships, pillars, sustainability } from "@/app/lib/content";
 import { ClientGrid } from "@/app/components/site/client-logos";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Nosotros",
   description: "Más de 27 años transformando vidrio y aluminio con una planta de 28,000 m², tecnología europea y certificación ISO 9001 e ISO 45001.",
-};
+  path: "/nosotros",
+});
 
 const pillarIcons = [Award, Sparkles, ShieldCheck, Leaf];
 

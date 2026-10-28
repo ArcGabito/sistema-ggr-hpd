@@ -9,6 +9,7 @@ import { LoginForm } from "./login-form";
 export const metadata: Metadata = {
   title: "Ingresar",
   description: "Acceso al Sistema de Gestión de Guías de Remisión de HPD Glass Group.",
+  robots: { index: false, follow: false },
 };
 
 export default function LoginPage() {

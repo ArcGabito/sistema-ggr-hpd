@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/app/lib/seo";
 import { PageHero } from "@/app/components/site/page-hero";
 import { ContactSection } from "@/app/components/site/contact-form";
 import { Sites } from "@/app/components/site/sites";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contacto",
   description: "Escríbenos o visítanos en Chorrillos, La Victoria o Chilca. Asesoría en vidrios y perfiles de aluminio para construcción.",
-};
+  path: "/contacto",
+});
 
 export default function ContactPage() {
   return (

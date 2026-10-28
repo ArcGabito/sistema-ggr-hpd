@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/app/lib/seo";
 import { ArrowUpRight } from "lucide-react";
 import { PageHero } from "@/app/components/site/page-hero";
 import { FacadeArt } from "@/app/components/site/facade-art";
 import { Reveal } from "@/app/components/site/reveal";
 import { blogPosts } from "@/app/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Blog",
   description: "Artículos sobre vidrio templado, laminado, insulado y Low-E, y tendencias del vidrio en la arquitectura.",
-};
+  path: "/blog",
+});
 
 const formatPostDate = (date: string) =>
   new Intl.DateTimeFormat("es-PE", { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));

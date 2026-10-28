@@ -48,10 +48,13 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.client
+      args:
+        SITE_URL: ${SITE_URL:-http://localhost:3000}
     image: sistema-ggr-hpd/client:latest
     container_name: hpd-ggr-client
     environment:
       API_URL: http://server:8080
+      SITE_URL: ${SITE_URL:-http://localhost:3000}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
     ports:
       - "${CLIENT_PORT:-3000}:3000"
