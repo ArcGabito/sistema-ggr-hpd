@@ -33,6 +33,7 @@ secret_for() {
     DB_SA_PASSWORD) printf 'Hpd_%s9a' "$(random_string 20)" ;;
     JWT_KEY) random_string 64 ;;
     SEED_ADMIN_PASSWORD) printf 'Hpd_%s1!' "$(random_string 12)" ;;
+    SEED_DEMO_PASSWORD) printf 'Hpd_%s2!' "$(random_string 12)" ;;
     *) return 1 ;;
   esac
 }
@@ -48,7 +49,7 @@ sync_env() {
     fi
     info "Creando .env desde .env.example con secretos aleatorios..."
     cp "$env_example" "$env_file"
-    for key in DB_SA_PASSWORD JWT_KEY SEED_ADMIN_PASSWORD; do
+    for key in DB_SA_PASSWORD JWT_KEY SEED_ADMIN_PASSWORD SEED_DEMO_PASSWORD; do
       value="$(secret_for "$key")"
       sed -i.bak "s|^${key}=.*|${key}=${value}|" "$env_file"
     done

@@ -103,5 +103,10 @@ public static class DbSeeder
             await context.SaveChangesAsync(cancellationToken);
             logger.LogInformation("Usuario administrador creado: {Email}", admin.Email);
         }
+
+        if (configuration.GetValue("Database:SeedDemoData", false))
+        {
+            await DemoDataSeeder.SeedAsync(context, configuration, logger, cancellationToken);
+        }
     }
 }

@@ -45,6 +45,8 @@ services:
       SeedAdmin__FullName: ${SEED_ADMIN_NAME:-Administrador HPD}
       SeedAdmin__Email: ${SEED_ADMIN_EMAIL:?Define SEED_ADMIN_EMAIL en .env}
       SeedAdmin__Password: ${SEED_ADMIN_PASSWORD:?Define SEED_ADMIN_PASSWORD en .env}
+      Database__SeedDemoData: ${SEED_DEMO_DATA:-false}
+      SeedDemo__Password: ${SEED_DEMO_PASSWORD:-}
       Smtp__Host: ${SMTP_HOST:-mailpit}
       Smtp__Port: ${SMTP_PORT:-1025}
       Smtp__Security: ${SMTP_SECURITY:-None}
