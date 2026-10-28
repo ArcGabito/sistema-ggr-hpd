@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +9,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { loginSchema, type LoginInput } from "@/app/lib/schemas";
 import { readError } from "@/app/lib/api";
+import { wakeServer, withWakeUpNotice } from "@/app/lib/wake";
 import type { User } from "@/app/lib/types";
 import { Field, Input } from "@/app/components/ui/field";
 import { Button } from "@/app/components/ui/button";
@@ -18,7 +19,7 @@ function safeNext(value: string | null) {
   return value && value.startsWith("/dashboard") && !value.startsWith("//") ? value : "/dashboard";
 }
 
-export function LoginForm() {
+export function LoginForm({ demo }: { demo?: { email: string; password: string } }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
@@ -28,12 +29,19 @@ export function LoginForm() {
     formState: { errors, isSubmitting },
   } = useForm<LoginInput>({ resolver: zodResolver(loginSchema) });
 
+  // Mientras se escriben las credenciales, la API y la base despiertan si estaban en reposo.
+  useEffect(() => {
+    void wakeServer();
+  }, []);
+
   const onSubmit = async (data: LoginInput) => {
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    const response = await withWakeUpNotice(() =>
+      fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    );
 
     if (!response.ok) {
       const error = await readError(response);
@@ -57,7 +65,7 @@ export function LoginForm() {
       transition={{ duration: 0.5 }}
     >
       <Field label="Correo corporativo" htmlFor="email" error={errors.email?.message}>
-        <Input id="email" type="email" autoComplete="email" placeholder="usuario@hpdglass.com" error={errors.email?.message} {...register("email")} />
+        <Input id="email" type="email" autoComplete="email" placeholder={demo?.email ?? "usuario@hpdglass.com"} error={errors.email?.message} {...register("email")} />
       </Field>
 
       <Field label="Contraseña" htmlFor="password" error={errors.password?.message}>
@@ -66,7 +74,7 @@ export function LoginForm() {
             id="password"
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
-            placeholder="••••••••"
+            placeholder={demo?.password ?? "••••••••"}
             className="pr-12"
             error={errors.password?.message}
             {...register("password")}

@@ -13,6 +13,12 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
+  // Credenciales de la demo pública (usuario Operador sobre datos ficticios). Sin configurar, no se muestran.
+  const demo =
+    process.env.DEMO_LOGIN_EMAIL && process.env.DEMO_LOGIN_PASSWORD
+      ? { email: process.env.DEMO_LOGIN_EMAIL, password: process.env.DEMO_LOGIN_PASSWORD }
+      : undefined;
+
   return (
     <main className="grid min-h-screen flex-1 lg:grid-cols-2">
       <section className="relative hidden overflow-hidden bg-sky-400 lg:block">
@@ -45,8 +51,13 @@ export default function LoginPage() {
           </span>
           <h1 className="mt-6 text-4xl font-bold tracking-tight">Ingresar</h1>
           <p className="mt-3 text-ink-500">Accede con tu cuenta corporativa para gestionar guías de remisión y despachos.</p>
+          {demo ? (
+            <p className="mt-4 rounded-xl bg-sky-50 px-4 py-3 text-sm text-ink-600">
+              <span className="font-semibold text-ink-900">Demo:</span> usa las credenciales que aparecen en los campos.
+            </p>
+          ) : null}
           <Suspense>
-            <LoginForm />
+            <LoginForm demo={demo} />
           </Suspense>
         </div>
 

@@ -1,5 +1,7 @@
 "use client";
 
+import { withWakeUpNotice } from "./wake";
+
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -34,7 +36,7 @@ export async function readError(response: Response): Promise<ApiError> {
 /** Cliente para el backend a través del proxy autenticado de Next.js (/api/backend). */
 export async function api<T>(path: string, init?: RequestInit & { json?: unknown }): Promise<T> {
   const { json, ...rest } = init ?? {};
-  const response = await fetch(`/api/backend/${path.replace(/^\//, "")}`, {
+  const response = await withWakeUpNotice(() => fetch(`/api/backend/${path.replace(/^\//, "")}`, {
     ...rest,
     headers: {
       Accept: "application/json",
@@ -42,7 +44,7 @@ export async function api<T>(path: string, init?: RequestInit & { json?: unknown
       ...rest.headers,
     },
     body: json !== undefined ? JSON.stringify(json) : rest.body,
-  });
+  }));
 
   if (response.status === 401) {
     window.location.assign(new URL(`/ingresar?next=${encodeURIComponent(window.location.pathname)}`, window.location.origin).href);

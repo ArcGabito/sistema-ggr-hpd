@@ -8,7 +8,8 @@ using Server.Models;
 namespace Server.Controllers;
 
 [ApiController]
-[Authorize]
+// Contienen datos personales de quienes escriben desde el sitio: no los ve el rol Operador.
+[Authorize(Roles = "Admin,Supervisor")]
 [Route("api/contact-requests")]
 public class ContactRequestsController(AppDbContext context) : ControllerBase
 {

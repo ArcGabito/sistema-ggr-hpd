@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -92,7 +93,7 @@ builder.Services
     .AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddProblemDetails();
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks().AddCheck<DatabaseHealthCheck>("database", tags: ["ready"]);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -112,7 +113,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHealthChecks("/health");
+// /health: el proceso responde (sin tocar la base). /health/ready: la base también, y la despierta.
+app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = _ => false });
+app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
 
 if (app.Configuration.GetValue("Database:MigrateOnStartup", true))
 {

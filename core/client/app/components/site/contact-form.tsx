@@ -7,6 +7,7 @@ import { Mail, Phone } from "lucide-react";
 import { contactSchema, type ContactInput } from "@/app/lib/schemas";
 import { company } from "@/app/lib/site-data";
 import { readError } from "@/app/lib/api";
+import { withWakeUpNotice } from "@/app/lib/wake";
 import { Button } from "@/app/components/ui/button";
 import { Reveal } from "./reveal";
 
@@ -22,11 +23,13 @@ export function ContactSection() {
   } = useForm<ContactInput>({ resolver: zodResolver(contactSchema) });
 
   const onSubmit = async (data: ContactInput) => {
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    const response = await withWakeUpNotice(() =>
+      fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    );
 
     if (!response.ok) {
       const error = await readError(response);

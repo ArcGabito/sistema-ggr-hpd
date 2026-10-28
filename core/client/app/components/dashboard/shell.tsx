@@ -16,7 +16,7 @@ const nav = [
   { href: "/dashboard/despachos", label: "Despachos", icon: Truck },
   { href: "/dashboard/clientes", label: "Clientes", icon: Users },
   { href: "/dashboard/flota", label: "Flota", icon: CarFront },
-  { href: "/dashboard/solicitudes", label: "Solicitudes", icon: Inbox },
+  { href: "/dashboard/solicitudes", label: "Solicitudes", icon: Inbox, roles: ["Admin", "Supervisor"] },
   { href: "/dashboard/blog", label: "Blog", icon: Newspaper, roles: ["Admin", "Supervisor"] },
 ];
 
