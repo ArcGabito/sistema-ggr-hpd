@@ -6,7 +6,7 @@ name: Backend
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - core/server/**
       - docker/Dockerfile.server

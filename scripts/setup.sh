@@ -2,16 +2,16 @@
 # Instalación remota: clona (o actualiza) el repositorio, crea el .env, instala dependencias
 # y levanta el proyecto. Es autónomo (no invoca otros scripts) e idempotente.
 #
-#   curl -fsSL https://raw.githubusercontent.com/ArcGabito/sistema-ggr-hpd/master/scripts/setup.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/ArcGabito/sistema-ggr-hpd/main/scripts/setup.sh | bash
 #
 # Variables opcionales:
 #   REPO_URL    (por defecto https://github.com/ArcGabito/sistema-ggr-hpd.git)
-#   BRANCH      (por defecto master)
+#   BRANCH      (por defecto main)
 #   TARGET_DIR  (por defecto el repo actual si ya estás dentro de él, si no ./sistema-ggr-hpd)
 set -euo pipefail
 
 REPO_URL="${REPO_URL:-https://github.com/ArcGabito/sistema-ggr-hpd.git}"
-BRANCH="${BRANCH:-master}"
+BRANCH="${BRANCH:-main}"
 DB_VOLUME="sistema-ggr-hpd-database-data"
 
 info() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }

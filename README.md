@@ -7,5 +7,5 @@ Sistema para emitir guías de remisión y coordinar los despachos de mercancía 
 #### Instala el Proyecto en Local:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ArcGabito/sistema-ggr-hpd/master/scripts/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ArcGabito/sistema-ggr-hpd/main/scripts/setup.sh | bash
 ```
