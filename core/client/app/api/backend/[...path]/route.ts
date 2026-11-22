@@ -1,4 +1,6 @@
+import { revalidateTag } from "next/cache";
 import { NextResponse, type NextRequest } from "next/server";
+import { BLOG_TAG } from "@/app/lib/blog";
 import { SESSION_COOKIE, apiUrl } from "@/app/lib/session";
 
 // La API puede estar en reposo (escala a cero) y su base en pausa: el primer pedido tarda más.
@@ -53,6 +55,10 @@ async function forward(request: NextRequest, { params }: Context) {
 
   if (upstream.status === 401) {
     response.cookies.delete(SESSION_COOKIE);
+  }
+  // Un artículo creado, editado o borrado: el blog público y el sitemap lo reflejan en la siguiente visita.
+  if (upstream.ok && request.method !== "GET" && path[0] === "admin" && path[1] === "blog") {
+    revalidateTag(BLOG_TAG, { expire: 0 });
   }
   return response;
 }
