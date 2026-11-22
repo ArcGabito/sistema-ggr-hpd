@@ -105,6 +105,9 @@ public static class DbSeeder
             logger.LogInformation("Usuario administrador creado: {Email}", admin.Email);
         }
 
+        // Antes de los datos de ejemplo, que la usan como autora de guías y despachos.
+        await DemoAccountSeeder.SeedAsync(context, configuration, logger, cancellationToken);
+
         if (configuration.GetValue("Database:SeedDemoData", false))
         {
             await DemoDataSeeder.SeedAsync(context, configuration, logger, cancellationToken);

@@ -15,6 +15,9 @@ FROM base AS builder
 # Las páginas públicas se generan al compilar: la URL del sitio debe estar disponible aquí.
 ARG SITE_URL=http://localhost:3000
 ENV SITE_URL=$SITE_URL
+# Credenciales de la demo que muestra /ingresar (vacías = no se muestran); solo se leen al generarla.
+ARG DEMO_LOGIN_EMAIL=""
+ARG DEMO_LOGIN_PASSWORD=""
 COPY --from=deps /app/node_modules ./node_modules
 COPY core/client/ ./
 RUN npm run build
