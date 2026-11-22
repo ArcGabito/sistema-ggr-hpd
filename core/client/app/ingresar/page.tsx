@@ -53,7 +53,7 @@ export default function LoginPage() {
           <p className="mt-3 text-ink-500">Accede con tu cuenta corporativa para gestionar guías de remisión y despachos.</p>
           {demo ? (
             <p className="mt-4 rounded-xl bg-sky-50 px-4 py-3 text-sm text-ink-600">
-              <span className="font-semibold text-ink-900">Demo:</span> usa las credenciales que aparecen en los campos.
+              <span className="font-semibold text-ink-900">Demo:</span> usa el botón «Entrar a la demo» o las credenciales que aparecen en los campos.
             </p>
           ) : null}
           <Suspense>

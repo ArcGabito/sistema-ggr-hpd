@@ -26,6 +26,7 @@ export function LoginForm({ demo }: { demo?: { email: string; password: string }
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginInput>({ resolver: zodResolver(loginSchema) });
 
@@ -53,6 +54,14 @@ export function LoginForm({ demo }: { demo?: { email: string; password: string }
     sileo.success({ title: `¡Bienvenido, ${user.fullName.split(" ")[0]}!`, description: "Sesión iniciada correctamente." });
     router.replace(safeNext(searchParams.get("next")));
     router.refresh();
+  };
+
+  // Un clic: completa los campos con la cuenta demo y entra.
+  const enterDemo = () => {
+    if (!demo) return;
+    setValue("email", demo.email);
+    setValue("password", demo.password);
+    void handleSubmit(onSubmit)();
   };
 
   return (
@@ -93,6 +102,11 @@ export function LoginForm({ demo }: { demo?: { email: string; password: string }
       <Button type="submit" loading={isSubmitting} className="w-full py-3.5">
         Ingresar
       </Button>
+      {demo ? (
+        <Button type="button" variant="outline" disabled={isSubmitting} onClick={enterDemo} className="w-full py-3.5">
+          Entrar a la demo
+        </Button>
+      ) : null}
     </motion.form>
   );
 }
