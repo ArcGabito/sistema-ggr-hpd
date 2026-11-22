@@ -190,10 +190,11 @@ public static class DemoDataSeeder
         if (string.IsNullOrWhiteSpace(password)) return users;
 
         var hasher = new PasswordHasher<User>();
+        var demoEmail = DemoAccountSeeder.DemoEmail(configuration);
         var plant = sites.FirstOrDefault(s => s.Type == SiteType.ProcessingPlant) ?? sites[0];
         (string Name, string Email, UserRole Role, Site Site)[] demoUsers =
         [
-            ("Rosa Castillo Vega", "supervisor.demo@hpdglass.com", UserRole.Supervisor, sites[0]),
+            ("Rosa Castillo Vega", DemoAccountSeeder.SampleSupervisorEmail, UserRole.Supervisor, sites[0]),
             ("Diego Salazar Ríos", "operador.demo@hpdglass.com", UserRole.Operator, plant)
         ];
 
@@ -203,7 +204,10 @@ public static class DemoDataSeeder
             if (user is null)
             {
                 user = new User { FullName = name, Email = email, Role = role, SiteId = site.Id };
-                user.PasswordHash = hasher.HashPassword(user, password);
+                // Solo la cuenta demo usa la contraseña pública; el resto son autores de los datos.
+                user.PasswordHash = email == demoEmail
+                    ? hasher.HashPassword(user, password)
+                    : DemoAccountSeeder.UnusablePasswordHash(hasher, user);
                 context.Users.Add(user);
             }
             users.Add(user);

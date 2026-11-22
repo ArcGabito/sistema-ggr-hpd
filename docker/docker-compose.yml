@@ -46,6 +46,8 @@ services:
       SeedAdmin__Email: ${SEED_ADMIN_EMAIL:?Define SEED_ADMIN_EMAIL en .env}
       SeedAdmin__Password: ${SEED_ADMIN_PASSWORD:?Define SEED_ADMIN_PASSWORD en .env}
       Database__SeedDemoData: ${SEED_DEMO_DATA:-false}
+      # Cuenta de la demo pública (Operador): se crea o restaura en cada arranque.
+      SeedDemo__Email: ${SEED_DEMO_EMAIL:-operador.demo@hpdglass.com}
       SeedDemo__Password: ${SEED_DEMO_PASSWORD:-}
       Smtp__Host: ${SMTP_HOST:-mailpit}
       Smtp__Port: ${SMTP_PORT:-1025}
@@ -69,6 +71,9 @@ services:
       dockerfile: docker/Dockerfile.client
       args:
         SITE_URL: ${SITE_URL:-http://localhost:3000}
+        # Credenciales que /ingresar muestra como demo (la página se genera en el build).
+        DEMO_LOGIN_EMAIL: ${SEED_DEMO_EMAIL:-operador.demo@hpdglass.com}
+        DEMO_LOGIN_PASSWORD: ${SEED_DEMO_PASSWORD:-}
     image: sistema-ggr-hpd/client:latest
     container_name: hpd-ggr-client
     environment:
